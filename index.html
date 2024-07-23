@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('/static/bg.jpeg');
+            background-image: url('bg.jpeg');
             image-resolution: auto;
             background-size: 140% 150%;
             margin: 0;
@@ -16,7 +16,7 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background-color: rgba(65, 40, 15, 0.47);
+            background-color: rgba(65, 40, 15, 0.87);
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 2px 4px rgba(87, 64, 6, 0.743);
@@ -97,24 +97,40 @@
             <li><a href="https://www.nhs.uk/common-health-questions/lifestyle/what-is-the-body-mass-index-bmi/">NHS</a></li>
             <li><a href="https://www.heart.org/en/healthy-living/healthy-eating/losing-weight/bmi-in-adults">American Heart Institute</a></li>
         </ul>
-
-        <p>Enter your height and weight below to calculate your BMI.</p>
-        
-        <form action="/calculate_bmi" method="POST">
+        <form id="bmiForm">
             <div>
                 <input type="text" name="height" id="height" required="required" placeholder="Height (in centimeters)">
             </div>
             <div>
-                <br><input type="text" name="weight" id="weight" required="required" placeholder="Weight (in kilograms)">
-            </div>
-            <br><button type="submit">Calculate BMI</button>
+                <input type="text" name="weight" id="weight" required="required" placeholder="Weight (in kilograms)">
+            </div><br>
+            <button type="submit">Calculate BMI</button>
         </form>
         
-        {% if bmi %}
         <div class="result">
-            <p>{{ bmi }}</p>
+            <p id="bmiResult"></p>
         </div>
-        {% endif %}
     </div>
+
+    <script>
+        document.getElementById('bmiForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var height = parseFloat(document.getElementById('height').value);
+            var weight = parseFloat(document.getElementById('weight').value);
+
+            if (height > 0 && weight > 0) {
+                var bmi = calculateBMI(height, weight);
+                document.getElementById('bmiResult').innerText = 'Your BMI is ' + bmi.toFixed(2);
+            } else {
+                document.getElementById('bmiResult').innerText = 'Please enter valid height and weight.';
+            }
+        });
+
+        function calculateBMI(height, weight) {
+            var heightMeters = height / 100;
+            var bmi = weight / (heightMeters * heightMeters);
+            return bmi;
+        }
+    </script>
 </body>
 </html>
